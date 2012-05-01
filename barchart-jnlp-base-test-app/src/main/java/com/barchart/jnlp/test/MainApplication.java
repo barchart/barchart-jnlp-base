@@ -37,7 +37,7 @@ public class MainApplication extends Frame {
 
 		// ################################
 
-		HostWrap.run();
+		HostWrap.main(null);
 
 		// ################################
 

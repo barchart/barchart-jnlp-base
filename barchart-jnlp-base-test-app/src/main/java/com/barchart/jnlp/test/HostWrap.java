@@ -33,7 +33,7 @@ public class HostWrap {
 
 	}
 
-	public static void run() throws Exception {
+	public static void main(final String[] args) throws Exception {
 
 		/** system properties */
 		{
