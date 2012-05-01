@@ -6,6 +6,7 @@ import java.awt.Graphics;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
+/** test applet; must extend java.applet.Applet */
 @SuppressWarnings("serial")
 public class MainApplet extends Applet {
 

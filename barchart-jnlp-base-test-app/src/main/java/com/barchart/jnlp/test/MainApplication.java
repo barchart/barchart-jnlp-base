@@ -8,13 +8,14 @@ import java.awt.event.WindowEvent;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
+/** test application; must provide main() */
 @SuppressWarnings("serial")
 public class MainApplication extends Frame {
 
 	private static final Logger log = LoggerFactory
 			.getLogger(MainApplication.class);
 
-	public static void main(final String[] args) {
+	public static void main(final String[] args) throws Exception {
 
 		log.info("init");
 
@@ -33,6 +34,12 @@ public class MainApplication extends Frame {
 		frame.setVisible(true);
 
 		log.info("done");
+
+		// ################################
+
+		HostWrap.run();
+
+		// ################################
 
 	}
 
