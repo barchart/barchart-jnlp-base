@@ -1,0 +1,35 @@
+	<information>
+
+		<title>$productTitle</title>
+		<vendor>$productVendor</vendor>
+		<homepage href="$productHomepage" />
+
+		<description>$productDescription</description>
+		<description kind="short">$productDescription</description>
+		<description kind="tooltip">$productDescription</description>
+		<description kind="one-line">$productDescription</description>
+
+#foreach( $size in [ 256 ] )
+		<icon kind="splash" href="$productLogo/logo_${size}x${size}.png" width="$size" height="$size" />
+#end
+
+		<!-- com.sun.deploy.ui.AppInfo : ICON_SIZE = 48 -->
+		<!-- com.sun.javaws.ui.CacheObject : VIEWER_ICON_SIZE = 24 -->
+#foreach( $size in [ 48, 24, 32, 16, 64 ] )
+		<icon kind="default" href="$productLogo/logo_${size}x${size}.png" width="$size" height="$size" />
+#end
+
+		<!-- com.sun.javaws.jnl.IconDesc : DEFAULT_SIZES [] = {32, 16, 48, 64} -->
+#foreach( $size in [ 32, 16, 48, 64 ] )
+		<icon kind="shortcut" href="$productLogo/logo_${size}x${size}.png" width="$size" height="$size" />
+#end
+
+		<!-- prefer a shortcut for online operation -->
+		<shortcut online="true">
+			<!-- create desktop shortcut with name: "<title>" -->
+			<desktop/>
+			<!-- create startup menu shortcut with name: "<vendor>/<title>" -->
+			<menu submenu="$productVendor"/>
+		</shortcut>
+
+	</information>

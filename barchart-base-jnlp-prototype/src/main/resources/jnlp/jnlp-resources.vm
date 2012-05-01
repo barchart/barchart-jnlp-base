@@ -1,0 +1,54 @@
+
+	<security>
+		<!-- "all-permissions" requires all jars must be signed -->
+		<all-permissions/>
+	</security>
+
+	<update $jnlpUpdateMode />
+
+	<resources>
+
+		<!-- system properties for both applet and application -->
+#foreach( $index in [0..100] )
+#set( $key = "" )
+#set( $value = "" )
+#set( $key = "jnlpProperty$index" )
+#set( $value = $properties.get($key) )
+#if( "$value" != "" )
+		<property $value />
+#end
+#end
+
+		<java
+			version="$jnlpJavaVersion"
+#if( $jnlpJavaUseArgs.contains("true") )
+			java-vm-args="$jnlpJavaArgsString"
+#end
+			/>
+
+#foreach( $entry in $dependencies.split("\n") )
+#if( $entry.contains("$mainJar") )
+		<!-- "main jar" must contain INDEX.LIST for applet; may provide main() for application; may extend java.awt.Applet for applet -->
+		<jar href="$mainJar" download="eager" main="true"/>
+
+#elseif( $entry.contains("$progressJar") )
+		<!-- must implement http://download.oracle.com/javase/6/docs/jre/api/javaws/jnlp/javax/jnlp/DownloadServiceListener.html -->
+		<jar href="$progressJar" download="progress" main="false"/>
+
+#else
+		$entry
+#end
+#end
+
+		<!-- jnlp extensions -->
+#foreach( $index in [0..100] )
+#set( $key = "" )
+#set( $value = "" )
+#set( $key = "jnlpExtension$index" )
+#set( $value = $properties.get($key) )
+#if( "$value" != "" )
+		<extension href="$value" />
+#end
+#end
+
+	</resources>

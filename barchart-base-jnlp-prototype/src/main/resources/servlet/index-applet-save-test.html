@@ -1,0 +1,147 @@
+
+<html>
+
+<head>
+
+<title></title>
+
+<!-- external -->
+<script src="http://www.java.com/js/deployJava.js"
+	type="text/javascript"></script>
+
+<!-- internal pulls from staging build-->
+<script src="browser-detect.js" type="text/javascript"></script>
+<script src="meta-info-artifact.js" type="text/javascript"></script>
+<script src="meta-info-applet.js" type="text/javascript"></script>
+
+</head>
+
+<body leftmargin="0px" topmargin="0px" marginwidth="0px" marginheight="0px" style="overflow: hidden">
+
+	<script type="text/javascript">
+	var isSaving;
+	
+     	window.onbeforeunload = function(){
+		 
+		 	// check if pending save
+		 	// if so call saveCommit();
+		 
+		 	if(platformApplet.isSavePending() == true){
+		 		isSaving=true;
+		 		doDelayLoop();
+		 		
+		 		return "There are unsaved changes.  Please click 'Stay on this page' to save all changes";
+		 	}
+	 
+	 	}
+	 	
+	 	function doDelayLoop() {
+	
+			if (isSaving==true) {
+				//add delay of 100 ms
+				setTimeout(function(){checkSaving();},100);
+			}else{
+				// allow window to close after saving
+				isSaving = false;
+				return true;
+			}
+		}
+	
+	 	function checkSaving() {
+			// call to platformApplet isSavePending();
+			isSaving = platformApplet.isSavePending();
+			doDelayLoop();
+		}
+	 	
+	 	
+	</script>
+
+	<script type="text/javascript">
+
+	//////////////////////////
+
+	// currently mac os x jnlp works by default only on chrome
+	var isBrokenMac = ( (browserDetect.OS == 'Mac') && (browserDetect.browser != 'Chrome') );
+
+	// currently windows jnlp does not work for safari
+	var isBrokenWin = ( (browserDetect.OS == 'Windows') && (browserDetect.browser == 'Safari') );
+
+	function getQuery() {
+		var vars = {};
+		var parts = window.location.href.replace(/[?&]+([^=&]+)=([^&]*)/gi, function(m,key,value) {
+			vars[key] = value;
+		});
+		return vars;
+	}
+
+	/////////////////////////
+
+	var query = getQuery();
+	var plugin = query.plugin;
+
+	/////////////////////////
+
+	// merge; let browser decide
+	if(plugin == 'default'){
+		usePluginV1V2();
+	}
+
+	// detect plugin mode in js script
+	if(plugin == 'auto'){
+		if( isBrokenMac || isBrokenWin ){
+			usePluginV1();
+		} else {
+			usePluginV2();
+		}
+	}
+
+	// force OLD plugin mode; uses single jvm
+	if(plugin == 'V1'){
+		usePluginV1();
+	}
+
+	// force NEW plugin mode; uses multiple jvm
+	if(plugin == 'V2'){
+		usePluginV1V2(); // force browser decide
+	}
+	
+	// ##############################
+
+	// CUSTOM autologin userid and pw args
+
+	function gup( name ){  
+
+	name = name.replace(/[\[]/,"\\\[").replace(/[\]]/,"\\\]");  
+	var regexS = "[\\?&]"+name+"=([^&#]*)";  
+	var regex = new RegExp( regexS );  
+	var results = regex.exec( window.location.href );  
+
+	if( results == null )    
+		return "";  
+	else    
+		return results[1];
+	}
+	
+
+	var userID = gup('uid');
+	var userPW = gup('pw');
+
+	// Add these to pivots applet properties
+	
+	appletParameters.startup_properties = appletParameters.startup_properties + "&uid=" + userID + "&pw=" + userPW;
+	
+	
+	//////////////////////////
+
+	// note: using initJavaVersion
+	deployJava.runApplet(
+			appletAttributes,
+			appletParameters,
+			artifactDescriptor.initJavaVersion
+			);
+
+	</script>
+
+</body>
+
+</html>

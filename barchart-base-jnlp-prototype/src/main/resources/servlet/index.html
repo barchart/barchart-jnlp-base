@@ -1,0 +1,83 @@
+<html>
+
+<!-- external -->
+<script src="http://www.java.com/js/deployJava.js"
+	type="text/javascript"></script>
+
+<!-- internal -->
+<script src="meta-info-artifact.js" type="text/javascript"></script>
+
+<head>
+
+<title>web start</title>
+
+</head>
+
+<body>
+
+	<script type="text/javascript">
+		document.write("finalName : " + artifactDescriptor.finalName + "<br>");
+		document.write("make time : " + artifactDescriptor.buildTime + "<br>");
+	</script>
+
+	<hr>
+
+	<b>Launch</b>
+	<table>
+		<tr>
+			<td>applet (browser auto-detect)</td>
+			<td><a href="index-applet.html?plugin=default">launch applet</a>
+			</td>
+		</tr>
+		<tr>
+			<td>applet (javascript auto-detect)</td>
+			<td><a href="index-applet.html?plugin=auto">launch applet</a></td>
+		</tr>
+		<tr>
+			<td>applet (force plugin V1)</td>
+			<td><a href="index-applet.html?plugin=V1">launch applet</a></td>
+		</tr>
+		<tr>
+			<td>applet (force plugin V2)</td>
+			<td><a href="index-applet.html?plugin=V2">launch applet</a></td>
+		</tr>
+		<tr>
+			<td>application</td>
+			<td><script type="text/javascript">
+				// note: using initJavaVersion
+				deployJava.createWebStartLaunchButton(
+						artifactDescriptor.jnlpFileApplication,
+						artifactDescriptor.initJavaVersion);
+			</script></td>
+		</tr>
+	</table>
+
+	<hr>
+
+	<b>brand/logo/*.png</b>
+
+	<br>
+
+	<img src="brand/logo/logo_16x16.png">
+	<img src="brand/logo/logo_24x24.png">
+	<img src="brand/logo/logo_32x32.png">
+	<img src="brand/logo/logo_48x48.png">
+	<img src="brand/logo/logo_64x64.png">
+	<img src="brand/logo/logo_128x128.png">
+	<img src="brand/logo/logo_256x256.png">
+
+	<hr>
+
+	<a href="brand/system.properties">brand/system.properties</a>
+
+	<hr>
+
+	<a href="brand/platform.properties">brand/platform.properties</a>
+
+	<hr>
+
+	<a href="brand/branding.properties">brand/branding.properties</a>
+
+</body>
+
+</html>

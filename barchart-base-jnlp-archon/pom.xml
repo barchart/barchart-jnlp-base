@@ -1,0 +1,588 @@
+<project xmlns="http://maven.apache.org/POM/4.0.0" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+	xsi:schemaLocation="http://maven.apache.org/POM/4.0.0 http://maven.apache.org/xsd/maven-4.0.0.xsd">
+
+	<modelVersion>4.0.0</modelVersion>
+
+	<parent>
+		<groupId>com.barchart.jnlp</groupId>
+		<artifactId>barchart-base-jnlp</artifactId>
+		<version>2.0.0-SNAPSHOT</version>
+	</parent>
+
+	<artifactId>barchart-base-jnlp-archon</artifactId>
+	<packaging>pom</packaging>
+
+	<properties>
+
+		<!-- this pom property shortcuts -->
+		<target>${project.build.directory}</target>
+		<finalName>${project.build.finalName}</finalName>
+
+		<!-- prototype templates -->
+		<prototypeGroupId>com.barchart.platform</prototypeGroupId>
+		<prototypeArtifactId>barchart-platform-jnlp-prototype</prototypeArtifactId>
+		<prototypeVersion>${project.parent.version}</prototypeVersion>
+
+		<!-- override in downstream : default branding bundle -->
+		<brandingGroupId>com.barchart.platform</brandingGroupId>
+		<brandingArtifactId>barchart-plugin-brand-testerbrand</brandingArtifactId>
+		<brandingVersion>2.0.1</brandingVersion>
+
+		<!-- optional -->
+		<!-- must implement http://download.oracle.com/javase/6/docs/jre/api/javaws/jnlp/javax/jnlp/DownloadServiceListener.html -->
+		<progressJar>none</progressJar>
+		<progressClass>none</progressClass>
+
+		<!-- NOT optional; must contain INDEX.LIST for all dependencies for applet 
+			to work in plugin V1 mode; -->
+		<mainJar>${finalName}.jar</mainJar>
+
+		<!-- NOT optional -->
+		<mainClassApplet>you-must-override-mainClassApplet</mainClassApplet>
+		<mainClassApplication>you-must-override-mainClassApplication</mainClassApplication>
+
+		<!-- ####### -->
+
+		<!-- http://download.oracle.com/javase/6/docs/technotes/guides/javaws/developersguide/syntax.html -->
+
+		<!-- these hacks are due to bugs in javaws.jar and deployJava.js -->
+		<!-- used by javaDeploy.js to constrain original download; must use specific 
+			version (no "+" or "*") -->
+		<initJavaVersion>1.6.0_26</initJavaVersion>
+		<!-- used by javaws.jar to constrain subsequent launches; must use "+" 
+			wildcard; must be below "init" version -->
+		<jnlpJavaVersion>1.6.0+</jnlpJavaVersion>
+
+		<!-- required jnlp api version -->
+		<jnlpSpecVersion>6.0+</jnlpSpecVersion>
+
+		<!-- jnlp jvm parameters ; used only by plugin V2; will start a separate 
+			jvm; see velocity templates -->
+		<jnlpJavaArgsString>-Xincgc -Xms128m -Xmx256m</jnlpJavaArgsString>
+
+		<!-- see velocity templates -->
+		<jnlpUpdateMode>check="always" policy="always"</jnlpUpdateMode>
+
+		<!-- ####### -->
+
+		<!-- location of extracted jnlp branding bundle -->
+		<jnlpBranding>${target}/jnlp-branding</jnlpBranding>
+
+		<!-- location of extracted jnlp prototype files -->
+		<jnlpPrototype>${target}/jnlp-prototype</jnlpPrototype>
+
+		<!-- location of final jnlp build result before zip -->
+		<jnlpAssembly>${target}/jnlp-assembly</jnlpAssembly>
+
+		<!-- names of jnlp files -->
+		<jnlpFileApplet>applet.jnlp</jnlpFileApplet>
+		<jnlpFileApplication>application.jnlp</jnlpFileApplication>
+
+		<!-- override in downstream -->
+		<!-- <amazonId>platform-repository-deployer</amazonId> -->
+		<!-- <amazonName>you-must-override-amazonName-based-on-repo</amazonName> -->
+		<!-- <amazonWebstart>you-must-override-amazonWebstart-based-on-brand</amazonWebstart> -->
+
+		<jnlpCodebase>http://${amazonName}/${amazonWebstart}</jnlpCodebase>
+
+		<!-- must provide in settings.xml -->
+		<certificateServerId>barchart-certificate</certificateServerId>
+		<certificateKeyStore>${user.home}/.ssl/barchart-java-cert.jks</certificateKeyStore>
+
+		<!-- jnlp launch branding defaults -->
+		<productTitle>platform-product</productTitle>
+		<productDescription>platform-product-description</productDescription>
+		<productVendor>platform-company</productVendor>
+		<productHomepage>http://www.barchart.com/</productHomepage>
+		<!-- jnlp launch branding: logo path relative to *.jnlp file -->
+		<productLogo>brand/logo</productLogo>
+
+		<!-- system properties for jvm; NOT-encoded -->
+		<jnlpProperty99>name="keyProp99" value="valueProp99"</jnlpProperty99>
+
+		<!-- application arguments for main(); NOT-encoded -->
+		<jnlpArgument99>--keyArgs99=valueArgs99</jnlpArgument99>
+
+		<!-- applet tag parameters for java.awt.Applet; URL-encoded -->
+		<jnlpParameter99>name="keyParm99" value="valueParm99"</jnlpParameter99>
+
+		<errorMessage>this must be generated from properties file</errorMessage>
+
+		<!-- <pivotClass>override-in-downstream</pivotClass> -->
+
+		<!-- used by pivot applet -->
+		<mainClassApplet>org.apache.pivot.wtk.BrowserApplicationContext$HostApplet</mainClassApplet>
+		<jnlpParameter0>name="id" value="platformApplet"</jnlpParameter0>
+		<jnlpParameter1>name="application_class_name" value="${pivotClass}"</jnlpParameter1>
+		<jnlpParameter10>name="startup_properties" value="${errorMessage}"</jnlpParameter10>
+		<jnlpParameter20>name="system_properties" value="${errorMessage}"</jnlpParameter20>
+		<jnlpParameter-startup_properties>${errorMessage}</jnlpParameter-startup_properties>
+		<jnlpParameter-system_properties>${errorMessage}</jnlpParameter-system_properties>
+
+		<!-- used by pivot application -->
+		<mainClassApplication>org.apache.pivot.wtk.DesktopApplicationContext</mainClassApplication>
+		<jnlpArgument0>${pivotClass}</jnlpArgument0>
+		<jnlpArgument1>${errorMessage}</jnlpArgument1>
+
+		<!-- optional extensions http://lopica.sourceforge.net/ref.html#extension -->
+		<!-- <jnlpExtension0>http://host/more-0.jnlp</jnlpExtension0> -->
+		<!-- <jnlpExtension1>http://host/more-1.jnlp</jnlpExtension1> -->
+
+	</properties>
+
+	<build>
+
+		<extensions>
+
+			<!-- https://github.com/jcaddel/maven-s3-wagon -->
+			<extension>
+				<groupId>org.kuali.maven.wagons</groupId>
+				<artifactId>maven-s3-wagon</artifactId>
+				<version>1.1.10</version>
+			</extension>
+
+		</extensions>
+
+		<pluginManagement>
+			<plugins>
+
+				<!-- http://mojo.codehaus.org/properties-maven-plugin/ -->
+				<plugin>
+					<groupId>org.codehaus.mojo</groupId>
+					<artifactId>properties-maven-plugin</artifactId>
+					<version>1.0-alpha-2</version>
+				</plugin>
+
+				<!-- http://mojo.codehaus.org/wagon-maven-plugin/ -->
+				<plugin>
+					<groupId>org.codehaus.mojo</groupId>
+					<artifactId>wagon-maven-plugin</artifactId>
+					<version>1.0-beta-3</version>
+				</plugin>
+
+			</plugins>
+		</pluginManagement>
+
+	</build>
+
+	<profiles>
+
+		<profile>
+
+			<id>make-jnlp</id>
+
+			<build>
+				<plugins>
+
+					<plugin>
+						<groupId>org.apache.maven.plugins</groupId>
+						<artifactId>maven-dependency-plugin</artifactId>
+						<executions>
+
+							<!-- download and copy all dependency jars -->
+							<execution>
+								<id>download-project-dependencies</id>
+								<phase>generate-sources</phase>
+								<goals>
+									<goal>copy-dependencies</goal>
+								</goals>
+							</execution>
+
+							<!-- download and unpack jnlp prototype -->
+							<execution>
+								<id>download-jnlp-prototype</id>
+								<phase>generate-sources</phase>
+								<goals>
+									<goal>unpack</goal>
+								</goals>
+								<configuration>
+									<overWriteIfNewer>true</overWriteIfNewer>
+									<artifactItems>
+										<artifactItem>
+											<groupId>${prototypeGroupId}</groupId>
+											<artifactId>${prototypeArtifactId}</artifactId>
+											<version>${prototypeVersion}</version>
+											<type>jar</type>
+											<outputDirectory>${jnlpPrototype}</outputDirectory>
+										</artifactItem>
+									</artifactItems>
+								</configuration>
+							</execution>
+
+							<!-- download and unpack branding bundle -->
+							<execution>
+								<id>download-branding-bundle</id>
+								<phase>generate-sources</phase>
+								<goals>
+									<goal>unpack</goal>
+								</goals>
+								<configuration>
+									<overWriteIfNewer>true</overWriteIfNewer>
+									<artifactItems>
+										<artifactItem>
+											<groupId>${brandingGroupId}</groupId>
+											<artifactId>${brandingArtifactId}</artifactId>
+											<version>${brandingVersion}</version>
+											<type>jar</type>
+											<outputDirectory>${jnlpBranding}</outputDirectory>
+										</artifactItem>
+									</artifactItems>
+								</configuration>
+							</execution>
+
+						</executions>
+					</plugin>
+
+					<!-- read various properties from files and apply to pom -->
+					<plugin>
+						<groupId>org.codehaus.mojo</groupId>
+						<artifactId>groovy-maven-plugin</artifactId>
+						<executions>
+							<execution>
+								<id>read-maven-setttings</id>
+								<phase>generate-resources</phase>
+								<goals>
+									<goal>execute</goal>
+								</goals>
+								<configuration>
+									<!-- read certificate alias and store pass from settings.xml -->
+									<source>
+									<![CDATA[
+	//
+	name = project.properties['certificateServerId'];
+	server = settings.servers.find{it.id.equals(name)};
+	println('### certificateServerId(' + server + ')');
+	project.properties['certificateAlias'] = server.username;
+	project.properties['certificateStorePass'] = server.password;
+	//
+	println('### mainJar(' + project.properties['mainJar'] + ')');
+	//
+									]]>
+									</source>
+								</configuration>
+							</execution>
+							<execution>
+								<id>read-brand-properties</id>
+								<phase>generate-resources</phase>
+								<goals>
+									<goal>execute</goal>
+								</goals>
+								<configuration>
+									<!-- read project properties from brand/platform.properties -->
+									<source>
+									<![CDATA[
+	// ################################################
+	//
+	// application properties file
+	//
+	folder = project.properties['jnlpAssembly'] // NOTE: filtered - see above
+	file = new java.io.File(folder, 'brand/platform.properties');
+	stream = new java.io.FileInputStream(file);
+	props = new java.util.Properties();
+	props.load(stream);
+	println('### properties : ' + file + '');
+	//
+	// pivot startup properties
+	index = 1;
+	params = 'none=none';
+	names = props.propertyNames();
+	while (names.hasMoreElements()) {
+		//
+	    name = names.nextElement();
+	    value = props.getProperty(name);
+		//
+		argument = '--' + name + '=' + value;
+		parameter = '&' + name + '=' + java.net.URLEncoder.encode(value,'UTF-8');
+		//
+		println('###     argument  : ' + argument);
+		println('###     parameter : ' + parameter);
+		//
+		project.properties['jnlpArgument' + index] = argument;
+		params = params  + parameter;
+		//
+		index = index + 1;
+	  }
+    project.properties['jnlpParameter-startup_properties'] = params;
+    project.properties['jnlpParameter10'] = 'name="startup_properties"' + ' ' + 'value="'+ params +'"';
+    //
+    // jnlp launch branding
+	project.properties['productVendor'] = props.getProperty('platform.launch.vendor');
+	project.properties['productHomepage'] = props.getProperty('platform.launch.homepage');
+	project.properties['productTitle'] = props.getProperty('platform.launch.title');
+	project.properties['productDescription'] = props.getProperty('platform.launch.description');
+	//
+	// ################################################
+	//
+	// system properties file
+	//
+	folder = project.properties['jnlpAssembly'] // NOTE: filtered - see above
+	file = new java.io.File(folder, 'brand/system.properties');
+	stream = new java.io.FileInputStream(file);
+	props = new java.util.Properties();
+	props.load(stream);
+	println('### properties : ' + file + '');
+	//
+	index = 1;
+	params = 'none=none';
+	names = props.propertyNames();
+	while (names.hasMoreElements()) {
+		//
+	    name = names.nextElement();
+	    value = props.getProperty(name);
+		//
+		property = 'name="' + name + '"' + ' ' + 'value="' + value + '"';
+		parameter = '&' + name + '=' + java.net.URLEncoder.encode(value,'UTF-8');
+		//
+		println('###     property  : ' + property);
+		println('###     parameter : ' + parameter);
+		//
+		project.properties['jnlpProperty' + index] = property;
+		params = params  + parameter;
+		//
+		index = index + 1;
+	  }
+    project.properties['jnlpParameter-system_properties'] = params;
+    project.properties['jnlpParameter20'] = 'name="system_properties"' + ' ' + 'value="'+ params +'"';
+	//
+	// ################################################
+									]]>
+									</source>
+								</configuration>
+							</execution>
+						</executions>
+					</plugin>
+
+					<!-- merge resources -->
+					<plugin>
+						<groupId>org.apache.maven.plugins</groupId>
+						<artifactId>maven-resources-plugin</artifactId>
+						<executions>
+
+							<execution>
+								<!-- note: this runs before property parser above -->
+								<id>merge-branding</id>
+								<phase>generate-sources</phase>
+								<goals>
+									<goal>copy-resources</goal>
+								</goals>
+								<configuration>
+
+									<resources>
+
+										<!-- from branding bundle -->
+										<resource>
+											<directory>${jnlpBranding}/brand</directory>
+											<filtering>false</filtering>
+										</resource>
+										<resource>
+											<directory>${jnlpBranding}/brand</directory>
+											<filtering>true</filtering>
+											<includes>
+												<include>**/*.properties</include>
+											</includes>
+										</resource>
+
+										<!-- from current project -->
+										<resource>
+											<directory>src/build/brand</directory>
+										</resource>
+
+									</resources>
+
+									<overwrite>true</overwrite>
+									<outputDirectory>${jnlpAssembly}/brand</outputDirectory>
+
+								</configuration>
+							</execution>
+
+							<execution>
+								<id>merge-resources</id>
+								<phase>generate-resources</phase>
+								<goals>
+									<goal>copy-resources</goal>
+								</goals>
+								<configuration>
+
+									<resources>
+
+										<!-- http://www.java.com/js/deployJava.txt -->
+
+										<!-- from prototype -->
+										<resource>
+											<directory>${jnlpPrototype}/more</directory>
+											<filtering>true</filtering>
+										</resource>
+										<!-- from current project -->
+										<resource>
+											<directory>src/build/more</directory>
+											<filtering>true</filtering>
+										</resource>
+
+										<!-- http://download.oracle.com/javase/1.5.0/docs/guide/javaws/developersguide/downloadservletguide.html -->
+
+										<!-- from prototype -->
+										<resource>
+											<directory>${jnlpPrototype}/servlet</directory>
+											<filtering>false</filtering>
+										</resource>
+										<!-- from current project -->
+										<resource>
+											<directory>src/build/servlet</directory>
+											<filtering>false</filtering>
+										</resource>
+
+									</resources>
+
+									<overwrite>true</overwrite>
+									<outputDirectory>${jnlpAssembly}</outputDirectory>
+
+								</configuration>
+							</execution>
+
+							<execution>
+								<id>merge-templates</id>
+								<phase>generate-resources</phase>
+								<goals>
+									<goal>copy-resources</goal>
+								</goals>
+								<configuration>
+
+									<resources>
+
+										<!-- from current project -->
+										<resource>
+											<directory>src/build/jnlp</directory>
+											<filtering>true</filtering>
+										</resource>
+
+									</resources>
+
+									<overwrite>true</overwrite>
+									<outputDirectory>${jnlpPrototype}/jnlp</outputDirectory>
+
+								</configuration>
+							</execution>
+
+						</executions>
+					</plugin>
+
+					<!-- produce custom manifest for main app artifact -->
+					<plugin>
+						<groupId>org.apache.maven.plugins</groupId>
+						<artifactId>maven-jar-plugin</artifactId>
+						<configuration>
+							<archive>
+								<index>true</index>
+								<manifest>
+									<addClasspath>true</addClasspath>
+									<!-- http://maven.apache.org/shared/maven-archiver/examples/classpath.html -->
+									<classpathLayoutType>custom</classpathLayoutType>
+									<customClasspathLayout>${artifact.artifactId}-${artifact.baseVersion}${dashClassifier?}.${artifact.extension}</customClasspathLayout>
+								</manifest>
+							</archive>
+						</configuration>
+					</plugin>
+
+					<!-- produce jnlp files and signed jars -->
+					<plugin>
+						<groupId>org.codehaus.mojo</groupId>
+						<artifactId>webstart-maven-plugin</artifactId>
+						<version>1.0-beta-3</version>
+
+						<configuration>
+
+							<codebase>${jnlpCodebase}</codebase>
+
+							<verbose>false</verbose>
+							<pack200>false</pack200>
+
+							<unsignAlreadySignedJars>true</unsignAlreadySignedJars>
+
+							<sign>
+								<alias>${certificateAlias}</alias>
+								<keystore>${certificateKeyStore}</keystore>
+								<storepass>${certificateStorePass}</storepass>
+							</sign>
+
+							<workDirectory>${jnlpAssembly}</workDirectory>
+
+						</configuration>
+
+						<executions>
+
+							<execution>
+								<id>make-applet</id>
+								<phase>package</phase>
+								<goals>
+									<goal>jnlp-single</goal>
+								</goals>
+								<configuration>
+									<jnlp>
+										<mainClass>${mainClassApplet}</mainClass>
+										<inputTemplateResourcePath>${jnlpPrototype}/jnlp</inputTemplateResourcePath>
+										<inputTemplate>applet.vm</inputTemplate>
+										<outputFile>${jnlpFileApplet}</outputFile>
+									</jnlp>
+								</configuration>
+							</execution>
+
+							<execution>
+								<id>make-application</id>
+								<phase>package</phase>
+								<goals>
+									<goal>jnlp-single</goal>
+								</goals>
+								<configuration>
+									<jnlp>
+										<mainClass>${mainClassApplication}</mainClass>
+										<inputTemplateResourcePath>${jnlpPrototype}/jnlp</inputTemplateResourcePath>
+										<inputTemplate>application.vm</inputTemplate>
+										<outputFile>${jnlpFileApplication}</outputFile>
+									</jnlp>
+								</configuration>
+							</execution>
+
+						</executions>
+					</plugin>
+
+				</plugins>
+			</build>
+
+		</profile>
+
+		<profile>
+			<id>publish-webstart</id>
+			<properties>
+				<serverId>platform-repository-deployer</serverId>
+				<serverURL>s3://${amazonName}</serverURL>
+				<serverFolder>/${amazonWebstart}</serverFolder>
+			</properties>
+			<build>
+				<plugins>
+					<plugin>
+						<groupId>org.codehaus.mojo</groupId>
+						<artifactId>wagon-maven-plugin</artifactId>
+						<executions>
+							<execution>
+								<id>upload</id>
+								<phase>package</phase>
+								<goals>
+									<goal>upload</goal>
+								</goals>
+								<configuration>
+									<fromDir>${jnlpAssembly}</fromDir>
+									<includes>**/*</includes>
+									<serverId>${serverId}</serverId>
+									<url>${serverURL}</url>
+									<toDir>${serverFolder}</toDir>
+								</configuration>
+							</execution>
+						</executions>
+					</plugin>
+				</plugins>
+			</build>
+		</profile>
+
+	</profiles>
+
+</project>

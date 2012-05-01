@@ -1,0 +1,34 @@
+#parse("jnlp-header.vm")
+
+<jnlp
+	spec="$jnlpSpecVersion"
+	href="$jnlpFileApplet"
+	codebase="$jnlpCodebase"
+	>
+
+#parse("jnlp-information.vm")
+#parse("jnlp-resources.vm")
+
+	<!-- applet class; must extend java.awt.Applet -->
+	<!-- width and height: when online - taken from <applet> tag; when off-line - taken from <applet-desc> tag -->
+	<applet-desc
+		name="$productTitle"
+		main-class="$mainClass"
+		progress-class="$progressClass"
+		width="1000" height="500"
+		>
+
+		<!-- applet tag parameters for java.awt.Applet -->
+#foreach( $index in [0..100] )
+#set( $key = "" )
+#set( $value = "" )
+#set( $key = "jnlpParameter$index" )
+#set( $value = $properties.get($key) )
+#if( "$value" != "" )
+		<param $value />
+#end
+#end
+
+	</applet-desc>
+
+</jnlp>

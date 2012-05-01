@@ -1,0 +1,32 @@
+#parse("jnlp-header.vm")
+
+<jnlp
+	spec="$jnlpSpecVersion"
+	href="$jnlpFileApplication"
+	codebase="$jnlpCodebase"
+	>
+
+#parse("jnlp-information.vm")
+#parse("jnlp-resources.vm")
+
+	<!-- application class; must provide main() -->
+	<application-desc
+		name="$productTitle"
+		main-class="$mainClass"
+		progress-class="$progressClass"
+		>
+
+		<!-- command line arguments for application main() -->
+#foreach( $index in [0..100] )
+#set( $key = "" )
+#set( $value = "" )
+#set( $key = "jnlpArgument$index" )
+#set( $value = $properties.get($key) )
+#if( "$value" != "" )
+		<argument>$value</argument>
+#end
+#end
+
+	</application-desc>
+
+</jnlp>
