@@ -18,6 +18,8 @@
 
 		<mainClassApplet>com.barchart.jnlp.test.MainApplet</mainClassApplet>
 		<mainClassApplication>com.barchart.jnlp.test.MainApplication</mainClassApplication>
+		
+		<jnlpExtension0>http://platform-repository-dev.aws-dev.barchart.com/webstart/testerbrand/component.jnlp</jnlpExtension0>
 
 	</properties>
 
