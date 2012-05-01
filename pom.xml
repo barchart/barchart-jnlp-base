@@ -15,14 +15,14 @@
 	<packaging>pom</packaging>
 
 	<scm>
-		<url>https://github.com/barchart/barchart-base-jnlp</url>
-		<connection>scm:git:git://github.com/barchart/barchart-base-jnlp.git</connection>
-		<developerConnection>scm:git:ssh://git@github.com/barchart/barchart-base-jnlp.git</developerConnection>
+		<url>https://github.com/barchart/barchart-jnlp-base</url>
+		<connection>scm:git:git://github.com/barchart/barchart-jnlp-base.git</connection>
+		<developerConnection>scm:git:ssh://git@github.com/barchart/barchart-jnlp-base.git</developerConnection>
 	</scm>
 
 	<modules>
-		<module>barchart-base-jnlp-archon</module>
-		<module>barchart-base-jnlp-prototype</module>
+		<module>barchart-jnlp-base-archon</module>
+		<module>barchart-jnlp-base-prototype</module>
 	</modules>
 
 </project>

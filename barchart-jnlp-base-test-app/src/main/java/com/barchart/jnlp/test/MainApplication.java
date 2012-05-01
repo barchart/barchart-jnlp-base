@@ -1,0 +1,50 @@
+package com.barchart.jnlp.test;
+
+import java.awt.Frame;
+import java.awt.Graphics;
+import java.awt.event.WindowAdapter;
+import java.awt.event.WindowEvent;
+
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
+
+@SuppressWarnings("serial")
+public class MainApplication extends Frame {
+
+	private static final Logger log = LoggerFactory
+			.getLogger(MainApplication.class);
+
+	public static void main(final String[] args) {
+
+		log.info("init");
+
+		final Frame frame = new MainApplication();
+
+		frame.setSize(200, 100);
+
+		frame.addWindowListener(new WindowAdapter() {
+			@Override
+			public void windowClosing(final WindowEvent we) {
+				log.info("exit");
+				System.exit(0);
+			}
+		});
+
+		frame.setVisible(true);
+
+		log.info("done");
+
+	}
+
+	@Override
+	public void paint(final Graphics g) {
+
+		log.info("paint");
+
+		g.drawString("application", 50, 50);
+
+		g.drawArc(30, 30, 20, 20, 0, 360);
+
+	}
+
+}

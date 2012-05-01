@@ -1,0 +1,31 @@
+<!--
+
+    Copyright (C) 2011-2012 Barchart, Inc. <http://www.barchart.com/>
+
+    All rights reserved. Licensed under the OSI BSD License.
+
+    http://www.opensource.org/licenses/bsd-license.php
+
+-->
+<project default="run" basedir="./..">
+
+	<echo message="basedir : ${basedir}" />
+
+	<target name="run">
+		
+		<condition property="executable" value="javaws">
+			<os family="unix" />
+		</condition>
+		<condition property="executable" value="javaws.exe">
+			<os family="windows" />
+		</condition>
+		
+		<exec executable="${executable}">
+			
+			<arg value="${basedir}/target/jnlp-assembly/applet.jnlp" />
+			
+		</exec>
+		
+	</target>
+
+</project>

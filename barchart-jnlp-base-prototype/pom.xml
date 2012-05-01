@@ -3,13 +3,12 @@
 	<modelVersion>4.0.0</modelVersion>
 
 	<parent>
-		<groupId>com.barchart.platform</groupId>
-		<artifactId>barchart-platform-jnlp</artifactId>
-		<version>2.0.3-SNAPSHOT</version>
-		<relativePath>..</relativePath>
+		<groupId>com.barchart.jnlp</groupId>
+		<artifactId>barchart-jnlp-base</artifactId>
+		<version>2.0.0-SNAPSHOT</version>
 	</parent>
 
-	<artifactId>barchart-platform-jnlp-prototype</artifactId>
+	<artifactId>barchart-jnlp-base-prototype</artifactId>
 	<packaging>jar</packaging>
 
 </project>

@@ -5,11 +5,11 @@
 
 	<parent>
 		<groupId>com.barchart.jnlp</groupId>
-		<artifactId>barchart-base-jnlp</artifactId>
+		<artifactId>barchart-jnlp-base</artifactId>
 		<version>2.0.0-SNAPSHOT</version>
 	</parent>
 
-	<artifactId>barchart-base-jnlp-archon</artifactId>
+	<artifactId>barchart-jnlp-base-archon</artifactId>
 	<packaging>pom</packaging>
 
 	<properties>
@@ -19,14 +19,14 @@
 		<finalName>${project.build.finalName}</finalName>
 
 		<!-- prototype templates -->
-		<prototypeGroupId>com.barchart.platform</prototypeGroupId>
-		<prototypeArtifactId>barchart-platform-jnlp-prototype</prototypeArtifactId>
+		<prototypeGroupId>com.barchart.jnlp</prototypeGroupId>
+		<prototypeArtifactId>barchart-jnlp-base-prototype</prototypeArtifactId>
 		<prototypeVersion>${project.parent.version}</prototypeVersion>
 
 		<!-- override in downstream : default branding bundle -->
-		<brandingGroupId>com.barchart.platform</brandingGroupId>
-		<brandingArtifactId>barchart-plugin-brand-testerbrand</brandingArtifactId>
-		<brandingVersion>2.0.1</brandingVersion>
+		<brandingGroupId>com.barchart.jnlp</brandingGroupId>
+		<brandingArtifactId>barchart-jnlp-base-test-brand</brandingArtifactId>
+		<brandingVersion>${project.parent.version}</brandingVersion>
 
 		<!-- optional -->
 		<!-- must implement http://download.oracle.com/javase/6/docs/jre/api/javaws/jnlp/javax/jnlp/DownloadServiceListener.html -->
@@ -109,20 +109,6 @@
 		<errorMessage>this must be generated from properties file</errorMessage>
 
 		<!-- <pivotClass>override-in-downstream</pivotClass> -->
-
-		<!-- used by pivot applet -->
-		<mainClassApplet>org.apache.pivot.wtk.BrowserApplicationContext$HostApplet</mainClassApplet>
-		<jnlpParameter0>name="id" value="platformApplet"</jnlpParameter0>
-		<jnlpParameter1>name="application_class_name" value="${pivotClass}"</jnlpParameter1>
-		<jnlpParameter10>name="startup_properties" value="${errorMessage}"</jnlpParameter10>
-		<jnlpParameter20>name="system_properties" value="${errorMessage}"</jnlpParameter20>
-		<jnlpParameter-startup_properties>${errorMessage}</jnlpParameter-startup_properties>
-		<jnlpParameter-system_properties>${errorMessage}</jnlpParameter-system_properties>
-
-		<!-- used by pivot application -->
-		<mainClassApplication>org.apache.pivot.wtk.DesktopApplicationContext</mainClassApplication>
-		<jnlpArgument0>${pivotClass}</jnlpArgument0>
-		<jnlpArgument1>${errorMessage}</jnlpArgument1>
 
 		<!-- optional extensions http://lopica.sourceforge.net/ref.html#extension -->
 		<!-- <jnlpExtension0>http://host/more-0.jnlp</jnlpExtension0> -->
@@ -248,6 +234,7 @@
 									<!-- read certificate alias and store pass from settings.xml -->
 									<source>
 									<![CDATA[
+	// ################################################
 	//
 	name = project.properties['certificateServerId'];
 	server = settings.servers.find{it.id.equals(name)};
@@ -257,6 +244,7 @@
 	//
 	println('### mainJar(' + project.properties['mainJar'] + ')');
 	//
+	// ################################################
 									]]>
 									</source>
 								</configuration>
@@ -282,67 +270,11 @@
 	props.load(stream);
 	println('### properties : ' + file + '');
 	//
-	// pivot startup properties
-	index = 1;
-	params = 'none=none';
-	names = props.propertyNames();
-	while (names.hasMoreElements()) {
-		//
-	    name = names.nextElement();
-	    value = props.getProperty(name);
-		//
-		argument = '--' + name + '=' + value;
-		parameter = '&' + name + '=' + java.net.URLEncoder.encode(value,'UTF-8');
-		//
-		println('###     argument  : ' + argument);
-		println('###     parameter : ' + parameter);
-		//
-		project.properties['jnlpArgument' + index] = argument;
-		params = params  + parameter;
-		//
-		index = index + 1;
-	  }
-    project.properties['jnlpParameter-startup_properties'] = params;
-    project.properties['jnlpParameter10'] = 'name="startup_properties"' + ' ' + 'value="'+ params +'"';
-    //
     // jnlp launch branding
 	project.properties['productVendor'] = props.getProperty('platform.launch.vendor');
 	project.properties['productHomepage'] = props.getProperty('platform.launch.homepage');
 	project.properties['productTitle'] = props.getProperty('platform.launch.title');
 	project.properties['productDescription'] = props.getProperty('platform.launch.description');
-	//
-	// ################################################
-	//
-	// system properties file
-	//
-	folder = project.properties['jnlpAssembly'] // NOTE: filtered - see above
-	file = new java.io.File(folder, 'brand/system.properties');
-	stream = new java.io.FileInputStream(file);
-	props = new java.util.Properties();
-	props.load(stream);
-	println('### properties : ' + file + '');
-	//
-	index = 1;
-	params = 'none=none';
-	names = props.propertyNames();
-	while (names.hasMoreElements()) {
-		//
-	    name = names.nextElement();
-	    value = props.getProperty(name);
-		//
-		property = 'name="' + name + '"' + ' ' + 'value="' + value + '"';
-		parameter = '&' + name + '=' + java.net.URLEncoder.encode(value,'UTF-8');
-		//
-		println('###     property  : ' + property);
-		println('###     parameter : ' + parameter);
-		//
-		project.properties['jnlpProperty' + index] = property;
-		params = params  + parameter;
-		//
-		index = index + 1;
-	  }
-    project.properties['jnlpParameter-system_properties'] = params;
-    project.properties['jnlpParameter20'] = 'name="system_properties"' + ' ' + 'value="'+ params +'"';
 	//
 	// ################################################
 									]]>
