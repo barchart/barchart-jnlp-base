@@ -36,12 +36,6 @@
 		<!-- provided by extension http://lopica.sourceforge.net/ref.html#extension -->
 		<dependency>
 			<groupId>com.barchart.platform</groupId>
-			<artifactId>barchart-platform-host-api</artifactId>
-			<version>RELEASE</version>
-			<scope>provided</scope>
-		</dependency>
-		<dependency>
-			<groupId>com.barchart.platform</groupId>
 			<artifactId>barchart-platform-host-impl</artifactId>
 			<version>RELEASE</version>
 			<scope>provided</scope>
