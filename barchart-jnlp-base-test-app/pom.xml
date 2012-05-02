@@ -19,8 +19,6 @@
 		<mainClassApplet>com.barchart.jnlp.test.MainApplet</mainClassApplet>
 		<mainClassApplication>com.barchart.jnlp.test.MainApplication</mainClassApplication>
 
-		<jnlpExtension0>http://platform-repository-dev.aws-dev.barchart.com/webstart/testerbrand/component.jnlp</jnlpExtension0>
-
 	</properties>
 
 	<dependencies>
@@ -35,7 +33,7 @@
 			<artifactId>logback-classic</artifactId>
 		</dependency>
 
-		<!-- provided by extension -->
+		<!-- provided by extension http://lopica.sourceforge.net/ref.html#extension -->
 		<dependency>
 			<groupId>com.barchart.platform</groupId>
 			<artifactId>barchart-platform-host-api</artifactId>
@@ -50,5 +48,44 @@
 		</dependency>
 
 	</dependencies>
+
+	<profiles>
+
+		<profile>
+			<id>amazon-release</id>
+			<properties>
+				<barchartFolder>barchart-release</barchartFolder>
+				<jnlpExtension0>http://platform-repository.aws.barchart.com/webstart/testerbrand/component.jnlp</jnlpExtension0>
+			</properties>
+		</profile>
+
+		<profile>
+			<id>amazon-staging</id>
+			<properties>
+				<barchartFolder>barchart-staging</barchartFolder>
+				<jnlpExtension0>http://platform-repository-dev.aws.barchart.com/webstart/testerbrand/component.jnlp</jnlpExtension0>
+			</properties>
+		</profile>
+
+		<profile>
+			<id>amazon-testing</id>
+			<properties>
+				<barchartFolder>barchart-testing</barchartFolder>
+				<jnlpExtension0>http://platform-repository-dev.aws-dev.barchart.com/webstart/testerbrand/component.jnlp</jnlpExtension0>
+			</properties>
+		</profile>
+
+	</profiles>
+
+	<build>
+	
+		<resources>
+			<resource>
+				<directory>src/main/resources</directory>
+				<filtering>true</filtering>
+			</resource>
+		</resources>
+		
+	</build>
 
 </project>

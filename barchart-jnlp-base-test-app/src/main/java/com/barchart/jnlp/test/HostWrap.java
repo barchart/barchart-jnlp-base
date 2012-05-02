@@ -19,6 +19,9 @@ import com.barchart.platform.host.main.App;
 
 /**
  * app host runner;
+ * 
+ * note: if you intend to run as "main()", execute maven-package-xxx.ant first
+ * to produce valid resource files
  */
 public class HostWrap {
 
@@ -42,10 +45,18 @@ public class HostWrap {
 
 	public static void main(final String[] args) throws Exception {
 
+		/** startup properties */
+		final String folder;
+		{
+			final Properties props = load("barchart.properties");
+			folder = props.getProperty("folder");
+			log.debug("config folder : {}", folder);
+		}
+
 		/** system properties */
 		{
 
-			final Properties props = load("runner/system.properties");
+			final Properties props = load(folder + "/" + "system.properties");
 
 			for (final Entry<Object, Object> entry : props.entrySet()) {
 				final String key = entry.getKey().toString();
@@ -59,7 +70,7 @@ public class HostWrap {
 		/** platform properties */
 		{
 
-			final Properties props = load("runner/platform.properties");
+			final Properties props = load(folder + "/" + "platform.properties");
 
 			final int size = props.size();
 
