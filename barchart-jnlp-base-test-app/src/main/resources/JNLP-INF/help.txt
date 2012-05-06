@@ -1,0 +1,32 @@
+JNLP Spec (JSR-56)
+http://www.scribd.com/doc/6677/jnlp1-0-1spec
+
+5.4.1 SIGNING OF JNLP FILES
+
+A JNLP file can optionally be signed. 
+
+A JNLP Client must check if a signed version of the JNLP file exists, 
+and if so, verify that it matches the JNLP file that is used to launch the application. 
+
+If it does not match, then the launch must be aborted.
+ 
+If no signed JNLP file exists, then the JNLP file is not signed,
+and no check needs to be performed.
+
+A JNLP file is signed by including a copy of it in the signed main JAR file. 
+
+The copy must match the JNLP file used to launch the application. 
+
+The signed copy must be named:JNLP-INF/APPLICATION.JNLP. 
+
+The APPLICATION.JNLPfilename should be generated in upper case, 
+but should be recognized in any case. 
+
+The signed JNLP file must be compared byte-wise against the JNLP file used to launch the application. 
+
+If the two byte streams are identical, then the verification succeeds, otherwise it fails. 
+
+As described above, a JNLP file is not required to be signed in order for an application to be signed. 
+
+This is similar to the behavior of Applets, where the Applet tags in the HTML pages are not signed, 
+even when granting unrestricted access to the Applet.

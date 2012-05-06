@@ -413,6 +413,15 @@
 								</manifest>
 							</archive>
 						</configuration>
+						<executions>
+							<execution>
+								<id>default-jar</id>
+								<phase>package</phase>
+								<goals>
+									<goal>jar</goal>
+								</goals>
+							</execution>
+						</executions>
 					</plugin>
 
 					<!-- produce jnlp files and signed jars -->
@@ -432,11 +441,16 @@
 
 							<sign>
 								<alias>${certificateAlias}</alias>
-								<keystore>${certificateKeyStore}</keystore>
 								<storepass>${certificateStorePass}</storepass>
+								<keystore>${certificateKeyStore}</keystore>
 							</sign>
 
 							<workDirectory>${jnlpAssembly}</workDirectory>
+
+							<makeArchive>false</makeArchive>
+							<attachArchive>false</attachArchive>
+
+							<verifyjar>true</verifyjar>
 
 						</configuration>
 
@@ -474,6 +488,45 @@
 								</configuration>
 							</execution>
 
+						</executions>
+					</plugin>
+
+					<!-- embedd JNLP-INF/APPLICATION.JNLP in main jar  -->
+					<plugin>
+						<groupId>org.apache.maven.plugins</groupId>
+						<artifactId>maven-antrun-plugin</artifactId>
+						<executions>
+							<execution>
+								<id>embedd-jnlp-inf</id>
+								<phase>package</phase>
+								<goals>
+									<goal>run</goal>
+								</goals>
+								<configuration>
+									<target>
+
+										<echo message="### main unpack" />
+										<unzip src="target/${mainJar}" dest="target/main" />
+
+										<echo message="### jnlp copy" />
+										<copy file="${jnlpAssembly}/${jnlpFileApplication}"
+											tofile="target/main/JNLP-INF/APPLICATION.JNLP" overwrite="true"
+											verbose="true" />
+
+										<echo message="### main pack" />
+										<zip basedir="target/main" destfile="target/${mainJar}" />
+
+										<echo message="### main sign" />
+										<signjar jar="target/${mainJar}" alias="${certificateAlias}"
+											storepass="${certificateStorePass}" keystore="${certificateKeyStore}" />
+
+										<echo message="### main copy" />
+										<copy file="target/${mainJar}" todir="${jnlpAssembly}"
+											overwrite="true" verbose="true" />
+
+									</target>
+								</configuration>
+							</execution>
 						</executions>
 					</plugin>
 

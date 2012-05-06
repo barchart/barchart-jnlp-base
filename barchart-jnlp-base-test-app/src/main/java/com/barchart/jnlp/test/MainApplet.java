@@ -44,4 +44,8 @@ public class MainApplet extends Applet {
 
 	}
 
+	public static void main(final String[] args) {
+		// TODO
+	}
+
 }

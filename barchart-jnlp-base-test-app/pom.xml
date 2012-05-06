@@ -14,10 +14,13 @@
 
 	<properties>
 
-		<jnlpCodebase>.</jnlpCodebase>
+		<jnlpCodebase>file:///work/git/barchart-jnlp-base/barchart-jnlp-base-test-app/target/jnlp-assembly</jnlpCodebase>
 
 		<mainClassApplet>com.barchart.jnlp.test.MainApplet</mainClassApplet>
 		<mainClassApplication>com.barchart.jnlp.test.MainApplication</mainClassApplication>
+
+		<certificateServerId>uscharts-certificate</certificateServerId>
+		<certificateKeyStore>${user.home}/.ssl/uscharts-java-cert.jks</certificateKeyStore>
 
 	</properties>
 
@@ -72,14 +75,14 @@
 	</profiles>
 
 	<build>
-	
+
 		<resources>
 			<resource>
 				<directory>src/main/resources</directory>
 				<filtering>true</filtering>
 			</resource>
 		</resources>
-		
+
 	</build>
 
 </project>
